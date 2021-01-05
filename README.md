@@ -1,8 +1,9 @@
 # Terraform
-![](images/terraform.png)
 - Terraform is an IAC orchestration tool which allows you to create IAC for deployment on any cloud
 - Terraform means "transform the Earth"
 - It is a Hashicorp product
+![](images/terraform.png)
+
 
 ## Why Terraform
 - It helps you scale up and down as per the user demand
@@ -17,12 +18,19 @@
 ### Language used is HCL is similar to JSON in terms of Syntax
 
 ## Setting up terraform
+1) Navigate to https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started and follow the instructions for your OS
+2) Download the terraform zip file and extract it
+3) Type env in the windows search bar then select path --> edit --> new --> browse then, navigate to the folder location for your extracted terraform and click okay.
+4) Restart bash
+5) Verify installation by using ```terraform -help```
 
-1) the provider is specified as "aws" with the region that the instance will be run in.
-2) a resource is then declared to create an ec2 instance for our app. Within the resource the ami id, instance type, associate public ip address, name and key name specified
+## Setting up main.tf file
+
+1) The provider is specified as "aws" with the region that the instance will be run in.
+2) A resource is then declared to create an ec2 instance for our app. Within the resource the ami id, instance type, associate public ip address, name and key name specified
 3) Similarly to step 2, a second resource is declared to create another ec2 instance for our db with the same variables specified.
 4)```terraform plan``` is run in the terminal to verify that the main.tf file contains no errors
-5) once verified, ```terraform apply``` is run in the terminal to create the ec2 instances.
+5) Once verified, ```terraform apply``` is run in the terminal to create the ec2 instances.
  
 ```
 # Which Cloud Provider is required
