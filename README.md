@@ -1,4 +1,5 @@
 # Terraform
+![](images/terraform.png)
 - Terraform is an IAC orchestration tool which allows you to create IAC for deployment on any cloud
 - Terraform means "transform the Earth"
 - It is a Hashicorp product
