@@ -2,12 +2,12 @@
 
 # Create Public Subnet
 resource "aws_subnet" "eng74_ben_public_subnet_terraform" {
-  vpc_id     = aws_vpc.eng74_ben_terraform_vpc.id
+  vpc_id     = var.vpc_id
   cidr_block = "108.21.1.0/24"
   # map_public_ip_on_launch = true
 
   tags = {
-    Name = "eng74_ben_subnet_public_terraform"
+    Name = "${var.eng_class_person}subnet_public_terraform"
   }
 }
 
@@ -15,7 +15,7 @@ resource "aws_subnet" "eng74_ben_public_subnet_terraform" {
 resource "aws_security_group" "sg_app_vpc" {
   name        = "public_SG_for_app_instance"
   description = "Allows traffic to app"
-  vpc_id      = aws_vpc.eng74_ben_terraform_vpc.id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "Allows HTTPS from everywhere"
@@ -56,13 +56,13 @@ resource "aws_security_group" "sg_app_vpc" {
   }
 
   tags = {
-    Name = "eng74_ben_sg_app_terraform"
+    Name = "${var.eng_class_person}sg_app_terraform"
   }
 }
 
 # Public NACL
 resource "aws_network_acl" "eng74_ben_terraform_nacl_public" {
-  vpc_id = aws_vpc.eng74_ben_terraform_vpc.id
+  vpc_id = var.vpc_id
   subnet_ids = [aws_subnet.eng74_ben_public_subnet_terraform.id]
   egress {
     protocol   = "-1"
@@ -110,41 +110,42 @@ resource "aws_network_acl" "eng74_ben_terraform_nacl_public" {
   }
 
   tags = {
-    Name = "eng74_ben_nacl_public_terraform"
+    Name = "${var.eng_class_person}nacl_public_terraform"
   }
 }
 
 # Route Table Public
 resource "aws_route_table" "eng74_ben_route_public_terraform" {
-  vpc_id = aws_vpc.eng74_ben_terraform_vpc.id
+  vpc_id = var.vpc_id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.eng74_ben_igw_terraform.id
+    gateway_id = var.gw_id
   }
 
   tags = {
-    Name = "eng74_ben_route_table_terraform"
+    Name = "${var.eng_class_person}route_table_terraform"
   }
 }
 
+resource "aws_route_table_association" "public_subnet_assoc"{
+	subnet_id = aws_subnet.eng74_ben_public_subnet_terraform.id
+	route_table_id = aws_route_table.eng74_ben_route_public_terraform.id
+}
 
 resource "aws_instance" "nodejs_instance"{
-        ami = var.ami_app
-        subnet_id = aws_subnet.eng74_ben_public_subnet_terraform
+        ami = var.nodejs_app
+        subnet_id = aws_subnet.eng74_ben_public_subnet_terraform.id
         vpc_security_group_ids = [aws_security_group.sg_app_vpc.id]
-	instance_type = var.instance
+	instance_type = "t2.micro"
 	associate_public_ip_address = true
 	tags = {
 	    Name = "ben_eng74_nodeapp_version_2"
         }
-	key_name = var.key_name
-        depends_on = [ 
-                aws_instance.nodejs_db_instance,
-         ]
+	key_name = var.ssh_key
         user_data = <<-EOF
                 #!/bin/bash
                 cd /home/ubuntu/app
-                DB_HOST=${aws_instance.nodejs_db_instance.private_ip} pm2 start app.js
+                DB_HOST=${var.db_ip} pm2 start app.js
                 EOF
 }

@@ -2,14 +2,18 @@ variable "vpc_id" {
     description = "This is the VPC ID"
 }
 
-variable "subnet_id" {
-   description = "This is the public subnet ID"
-}
-
-variable "route_id" {
-    description = "This is the public route table ID"
-}
-
-variable "igw_id" {
+variable "gw_id" {
     description = "This is the IGW ID"
 }
+
+variable "ssh_key" {
+    description = "ssh key"
+}
+
+variable "eng_class_person" {
+  description = "naming variable"
+}
+
+variable "nodejs_app" {}
+
+variable "db_ip" {}

@@ -17,3 +17,7 @@ variable "ami_db" {
 variable "key_name" {
      default = "eng74.ben.aws.key"
 }
+
+variable "eng_class_person" {
+  default = "eng74_ben_"
+}
